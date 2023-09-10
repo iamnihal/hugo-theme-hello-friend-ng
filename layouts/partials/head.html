@@ -8,21 +8,24 @@
 <meta name="theme-color" content="{{ .Site.Params.themeColor }}" />
 <link rel="canonical" href="{{ .Permalink }}" />
 
-<!-- Facebook Meta Tags -->
-<meta property="og:url" content="https://nihalchoudhary.in">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Nihal">
-<meta property="og:description" content="A passionate security engineer who dedicates their spare time to coding. Additionally, I have a keen interest in philosophy and the universe, enriching my intellectual journey.">
-<meta property="og:image" content="https://raw.githubusercontent.com/iamnihal/iamnihal.github.io/main/assets/meta_whatsapp.png"/>
-<!-- <meta property="og:image" content="https://raw.githubusercontent.com/iamnihal/iamnihal.github.io/main/assets/meta_image.png"> -->
+{{ $defaultImage := "https://raw.githubusercontent.com/iamnihal/iamnihal.github.io/main/assets/banner.png" }}
+{{ $contentImages := findRE `<img.*?src=["'](https?://[^"']*?)["'].*?>` .Content }}
 
-<!-- Twitter Meta Tags -->
-<meta name="twitter:card" content="summary_large_image">
-<meta property="twitter:domain" content="nihalchoudhary.in">
-<meta property="twitter:url" content="https://nihalchoudhary.in">
-<meta name="twitter:title" content="Nihal">
-<meta name="twitter:description" content="A passionate security engineer who dedicates their spare time to coding. Additionally, I have a keen interest in philosophy and the universe, enriching my intellectual journey.">
-<!-- <meta name="twitter:image" content="https://raw.githubusercontent.com/iamnihal/iamnihal.github.io/main/assets/meta_image.png"> -->
+<meta property="og:locale" content="en_GB">
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+<meta property="og:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} &middot; {{ .Site.Title }}{{ end }}">
+<meta property="og:description" content="{{ if .IsHome }}{{ .Description }}{{ else }}{{ htmlEscape .Summary }}{{ end }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:site_name" content="{{ .Site.Title }}">
+{{ with index $contentImages 0 }}
+  <meta property="og:image" content="{{ . }}">
+  <meta property="og:image:secure_url" content="{{ . }}">
+{{ else }}
+  <meta property="og:image" content="{{ $defaultImage }}">
+  <meta property="og:image:secure_url" content="{{ $defaultImage }}">
+{{- end }}
+{{ range .Params.categories }}<meta property="article:section" content="{{ . }}">{{ end }}
+{{ if isset .Params "date" }}<meta property="article:published_time" content="{{ (time .Date).Format "2006-01-02T15:04:05Z" }}">{{ end }}
 
 {{ block "title" . }}
     <title>
