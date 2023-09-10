@@ -1,3 +1,10 @@
 {{ if .Get "src" }}
-    <img src="{{ .Get "src" | safeURL }}" {{ with .Get "alt" }} alt="{{ . | plainify }}" {{ end }} class="{{ with .Get "position"}}{{ . }}{{ else -}} left {{- end }}" {{ with .Get "style" }} style="{{ . | safeCSS }}" {{ end }} />
+  {{ $asset := resources.Get (.Get "src") }}
+  {{ $size := .Get "size" }}
+  {{ $img := $asset.Fit $size }}
+  <figure class="image is-3by2"
+          {{ with .Get "style" }} style="{{ . | safeCSS }}" {{ end }}
+          {{ with .Get "align" }} data-align="{{ . }}" {{ end }}>
+    <img alt="{{ .Get "alt" }}" src="{{ $img.RelPermalink | safeURL }}" />
+  </figure>
 {{ end }}
